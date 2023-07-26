@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Copy sync.yml to lagzian/TelegramV2rayCollector
-        run: |
-          cp configs/sync.yml repo/.github/workflows/sync.yml || true
-        continue-on-error: true
-
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -22,6 +17,11 @@ jobs:
           path: repo  # Clone the repository to the "repo" directory
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Copy sync.yml to lagzian/TelegramV2rayCollector
+        run: |
+          cp MyNewRepo/configs/sync.yml repo/.github/workflows/sync.yml || true
+        continue-on-error: true
 
       - name: Replace text in Readme2.md
         run: |
