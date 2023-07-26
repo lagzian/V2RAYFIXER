@@ -10,14 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download sync.yml from lagzian/V2RAYFIXER/configs
-        run: |
-          curl -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -O -L "https://raw.githubusercontent.com/lagzian/V2RAYFIXER/main/configs/sync.yml" || true
-        continue-on-error: true
-
       - name: Copy sync.yml to lagzian/TelegramV2rayCollector
         run: |
-          mv sync.yml repo/.github/workflows/sync.yml || true
+          cp sync.yml lagzian/TelegramV2rayCollector/.github/workflows/sync.yml || true
         continue-on-error: true
 
       - name: Checkout repository
@@ -41,5 +36,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'yebekhe' with 'lagzian'"
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
