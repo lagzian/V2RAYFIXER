@@ -1,0 +1,23 @@
+name: Edit Readme
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Run every hour
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  edit_readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Replace text in Readme2.md
+        run: |
+          sed -i 's/yebekhe/lagzian/g' Readme2.md
+          git config --global user.name "lagzian"
+          git config --global user.email "milad.lagzian@gmail.com"
+          git add Readme2.md
+          git commit -m "Replace 'yebekhe' with 'lagzian'"
+          git push
