@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Copy sync.yml to lagzian/TelegramV2rayCollector
         run: |
-          cp ../sync.yml repo/.github/workflows/sync.yml || true
+          cp configs/sync.yml repo/.github/workflows/sync.yml || true
         continue-on-error: true
 
       - name: Checkout repository
