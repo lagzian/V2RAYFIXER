@@ -10,11 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repository
+      - name: Checkout repository
         uses: actions/checkout@v2
         with:
           repository: lagzian/TelegramV2rayCollector
           path: repo  # Clone the repository to the "repo" directory
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Replace text in Readme2.md
         run: |
@@ -24,4 +26,4 @@ jobs:
           git config user.email "milad.lagzian@gmail.com"
           git add Readme2.md
           git commit -m "Replace 'yebekhe' with 'lagzian'"
-          git push https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git HEAD:main
+          git push origin HEAD:main
