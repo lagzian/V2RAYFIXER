@@ -24,4 +24,4 @@ jobs:
           git config user.email "milad.lagzian@gmail.com"
           git add Readme2.md
           git commit -m "Replace 'yebekhe' with 'lagzian'"
-          git push
+          git push https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git HEAD:main
