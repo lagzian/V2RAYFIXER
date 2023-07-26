@@ -26,4 +26,5 @@ jobs:
           git config user.email "milad.lagzian@gmail.com"
           git add Readme2.md
           git commit -m "Replace 'yebekhe' with 'lagzian'"
+          git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
           git push origin HEAD:main
