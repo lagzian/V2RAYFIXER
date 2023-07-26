@@ -10,14 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Clone repository
         uses: actions/checkout@v2
+        with:
+          repository: lagzian/TelegramV2rayCollector
+          path: repo  # Clone the repository to the "repo" directory
 
       - name: Replace text in Readme2.md
         run: |
-          sed -i 's/yebekhe/lagzian/g' Readme2.md
-          git config --global user.name "lagzian"
-          git config --global user.email "milad.lagzian@gmail.com"
+          sed -i 's/yebekhe/lagzian/g' repo/Readme2.md
+          cd repo
+          git config user.name "lagzian"
+          git config user.email "milad.lagzian@gmail.com"
           git add Readme2.md
           git commit -m "Replace 'yebekhe' with 'lagzian'"
           git push
