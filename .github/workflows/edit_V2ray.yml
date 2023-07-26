@@ -20,7 +20,7 @@ jobs:
 
       - name: Copy sync.yml to lagzian/TelegramV2rayCollector
         run: |
-          cp MyNewRepo/configs/sync.yml repo/.github/workflows/sync.yml || true
+          cp V2RAYFIXER/configs/sync.yml repo/.github/workflows/sync.yml || true
         continue-on-error: true
 
       - name: Replace text in Readme2.md
