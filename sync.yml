@@ -1,0 +1,64 @@
+name: Sync Repository
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: pip install python-telegram-bot
+
+      - name: Sync repository
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        id: sync
+        run: |
+          gh repo sync lagzian/TelegramV2rayCollector -b main || echo "::set-output name=exit_code::1"
+
+      - name: Send Telegram notification on success
+        if: steps.sync.outputs.exit_code == '0'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<EOF
+          import asyncio
+          from telegram import Bot
+
+          async def send_telegram_message():
+              bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
+              bot = Bot(token=bot_token)
+              chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
+              message = '✅✅ V2ray Repository Updated Successfully! ✅✅'
+              await bot.send_message(chat_id=chat_id, text=message)
+
+          asyncio.run(send_telegram_message())
+          EOF
+
+      - name: Send Telegram notification on failure
+        if: steps.sync.outputs.exit_code != '0'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<EOF
+          import asyncio
+          from telegram import Bot
+
+          async def send_telegram_message():
+              bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
+              bot = Bot(token=bot_token)
+              chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
+              message = '❗❗⚠️⚠️ V2ray Repository Sync Failed! ⚠️⚠️❗❗'
+              await bot.send_message(chat_id=chat_id, text=message)
+
+          asyncio.run(send_telegram_message())
+          EOF
