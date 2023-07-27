@@ -12,39 +12,48 @@ jobs:
     steps:
       # ... (previous steps remain the same)
 
-      - name: Check if sync.yml already exists in the destination directory
+      - name: Check if sync.yml artifact exists
+        id: check_artifact
         run: |
-          FILE_PATH="repo/.github/workflows/sync.yml"
-          if [ -f "$FILE_PATH" ]; then
-            echo "Removing existing sync.yml..."
-            rm "$FILE_PATH"
+          if [ -f "sync.yml" ]; then
+            echo "sync.yml artifact found."
+            echo "::set-output name=sync_yml_found::true"
+          else
+            echo "sync.yml artifact not found."
+            echo "::set-output name=sync_yml_found::false"
           fi
 
       - name: Copy sync.yml to .github/workflows directory
+        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           echo "Copying sync.yml to the destination directory..."
           cp sync.yml repo/.github/workflows/
           echo "File copied successfully."
 
       - name: Display contents of copied sync.yml
+        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           cat repo/.github/workflows/sync.yml
 
       - name: Configure Git
+        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
 
       - name: Replace text in Readme2.md
+        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
 
       - name: Display contents of .github/workflows directory after replacement
+        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           ls -al repo/.github/workflows/
 
       - name: Check for changes in the repository
+        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           cd repo
           if git diff-index --quiet HEAD -- .github/workflows/sync.yml; then
