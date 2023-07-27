@@ -20,7 +20,11 @@ jobs:
 
       - name: Copy sync.yml to workflow directory
         run: |
-          cp sync.yml repo/.github/workflows/
+          if [ -f "$GITHUB_WORKSPACE/sync.yml" ]; then
+            cp "$GITHUB_WORKSPACE/sync.yml" repo/.github/workflows/
+          else
+            echo "sync.yml not found. Skipping copy operation."
+          fi
 
       - name: Replace text in Readme2.md
         run: |
