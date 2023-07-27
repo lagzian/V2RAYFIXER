@@ -40,10 +40,18 @@ jobs:
         run: |
           ls -al repo/.github/workflows/
 
+      - name: Check if sync.yml already exists in the destination directory
+        run: |
+          FILE_PATH="repo/.github/workflows/sync.yml"
+          if [ -f "$FILE_PATH" ]; then
+            echo "Removing existing sync.yml..."
+            rm "$FILE_PATH"
+          fi
+
       - name: Copy sync.yml to .github/workflows directory
         run: |
           echo "Copying sync.yml to the destination directory..."
-          mv -f sync.yml repo/.github/workflows/
+          cp sync.yml repo/.github/workflows/
           echo "File copied successfully."
 
       - name: Display contents of .github/workflows directory after copy
