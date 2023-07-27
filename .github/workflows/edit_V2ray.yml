@@ -51,3 +51,8 @@ jobs:
             git commit -m "Replace 'yebekhe' with 'lagzian'"
             git push origin HEAD:main
           fi
+
+      - name: Copy sync.yml to .github/workflows directory
+        run: |
+          cp sync.yml repo/.github/workflows/sync.yml
+          rm sync.yml
