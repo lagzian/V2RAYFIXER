@@ -2,7 +2,7 @@ name: Sync Sync.yml Every Hour
 on:
   schedule:
     - cron: '0 * * * *' # Run every hour at the start of the hour
-  workflow_dispatch:
+  workflow_dispatch: # Enable manual trigger
 
 jobs:
   sync:
@@ -14,6 +14,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main # Change 'main' to the appropriate branch if needed
+
+      - name: Delete existing sync.yml if present
+        run: |
+          rm -f sync.yml
 
       - name: Download sync.yml from Google Drive
         run: |
