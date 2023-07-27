@@ -80,6 +80,12 @@ jobs:
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
             git commit -m "Replace 'yebekhe' with 'lagzian'" --allow-empty
+
+            # Set Git credentials using the GitHub access token
+            git config --local credential.helper 'store --file=.git/credentials' # Save the credentials
+            git config --local user.name "lagzian"
+            git config --local user.email "milad.lagzian@gmail.com"
+
             git push origin HEAD:main
           else
             echo "No changes to commit."
