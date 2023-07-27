@@ -34,15 +34,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: sync-yml
-          path: repo/.github/workflows/
+          path: repo
 
       - name: Replace text in Readme2.md
         run: |
-          sed -i 's/yebekhe/lagzian/g' repo/Readme2.md
+          sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
-          git add Readme2.md
+          git add .github/workflows/sync.yml
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
@@ -55,3 +55,4 @@ jobs:
       - name: Copy sync.yml to .github/workflows directory
         run: |
           cp sync.yml repo/.github/workflows/
+          rm sync.yml
