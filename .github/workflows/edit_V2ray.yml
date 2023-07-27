@@ -12,10 +12,6 @@ jobs:
     steps:
       # ... (previous steps remain the same)
 
-      - name: Display contents of copied sync.yml
-        run: |
-          cat repo/.github/workflows/sync.yml
-
       - name: Check if sync.yml already exists in the destination directory
         run: |
           FILE_PATH="repo/.github/workflows/sync.yml"
@@ -51,7 +47,7 @@ jobs:
       - name: Check for changes in the repository
         run: |
           cd repo
-          if git diff-index --quiet HEAD; then
+          if git diff-index --quiet HEAD -- .github/workflows/sync.yml; then
             echo "No changes to commit."
             git status
           else
