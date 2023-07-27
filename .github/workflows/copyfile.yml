@@ -2,6 +2,7 @@ name: Sync Sync.yml Every Hour
 on:
   schedule:
     - cron: '0 * * * *' # Run every hour at the start of the hour
+  workflow_dispatch:
 
 jobs:
   sync:
