@@ -1,4 +1,4 @@
-name: Edit Readme and Copy sync.yml
+name: Edit Readme and Sync Files
 
 on:
   schedule:
@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: List contents of checked directory
-        run: ls -la $GITHUB_WORKSPACE
-
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -21,23 +18,33 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Copy sync.yml to workflow directory
-        run: |
-          cp $GITHUB_WORKSPACE/sync.yml repo/.github/workflows/
-
       - name: Replace text in Readme2.md
         run: |
           sed -i 's/yebekhe/lagzian/g' repo/Readme2.md
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
-          git add Readme2.md .github/workflows/sync.yml
+          git add Readme2.md
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
             echo "No changes to commit."
           else
-            git commit -m "Replace 'yebekhe' with 'lagzian' and copy sync.yml"
+            git commit -m "Replace 'yebekhe' with 'lagzian'"
             git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
+
+      - name: Copy and Replace sync.yml
+        run: |
+          cp $GITHUB_WORKSPACE/sync.yml repo/.github/workflows/sync.yml
+          cd repo
+          git add .github/workflows/sync.yml
+          git commit -m "Force copy and replace sync.yml"
+          git push
+
+      - name: Upload sync.yml as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: sync-yml
+          path: $GITHUB_WORKSPACE/sync.yml
