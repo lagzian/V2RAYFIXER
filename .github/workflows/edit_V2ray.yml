@@ -54,9 +54,9 @@ jobs:
           cp sync.yml repo/.github/workflows/
           echo "File copied successfully."
 
-      - name: Display contents of .github/workflows directory after copy
+      - name: Display contents of copied sync.yml
         run: |
-          ls -al repo/.github/workflows/
+          cat repo/.github/workflows/sync.yml
 
       - name: Configure Git
         run: |
