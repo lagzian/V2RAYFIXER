@@ -1,37 +1,42 @@
 name: Copy File
 
-on: 
-  push:
-    branches:
-      - main
-  workflow_dispatch:  
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
 
 jobs:
+
   copy:
     runs-on: ubuntu-latest
+
     steps:
-    
     - name: Checkout source repository
       uses: actions/checkout@v2
       with:
         repository: lagzian/source-repo
         token: ${{ secrets.ACCESS_TOKEN }}
-        
+
     - name: Checkout destination repository
       uses: actions/checkout@v2
-      with: 
+      with:
         repository: lagzian/TelegramV2rayCollector
         token: ${{ secrets.ACCESS_TOKEN }}
         path: destination-repo
-        
+
     - name: Copy file
       run: cp ./source-repo/sync.yml ./destination-repo/.github/workflows/
-      
-   - name: Commit and push changes
-     run: |
-       cd ./destination-repo
-       git config user.name "Automated"
-       git config user.email "actions@github.com"
-       git add .
-       git commit -m "Copy sync.yml file"
-       git push
+
+    - name: Commit and push changes
+      run: |
+        cd ./destination-repo
+        git config user.name "Automated"
+        git config user.email "actions@github.com"
+        git add .
+        git commit -m "Copy sync.yml file"
+        git push
