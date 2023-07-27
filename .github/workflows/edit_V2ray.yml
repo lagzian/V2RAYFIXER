@@ -30,6 +30,9 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
+      - name: Create .github/workflows directory
+        run: mkdir -p repo/.github/workflows
+
       - name: Download sync.yml from artifacts
         uses: actions/download-artifact@v2
         with:
@@ -53,6 +56,4 @@ jobs:
           fi
 
       - name: Copy sync.yml to .github/workflows directory
-        run: |
-          cp sync.yml repo/.github/workflows/sync.yml
-          rm sync.yml
+        run: cp sync.yml repo/.github/workflows/sync.yml
