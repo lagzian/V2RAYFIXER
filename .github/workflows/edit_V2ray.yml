@@ -1,4 +1,4 @@
-name: Edit Readme and Sync Files
+name: Edit Readme and Sync Workflow
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Manual trigger
 
 jobs:
-  edit_readme:
+  edit_readme_and_sync_workflow:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,16 +35,14 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Copy and Replace sync.yml
+      - name: Download sync.yml
         run: |
-          cp $GITHUB_WORKSPACE/sync.yml repo/.github/workflows/sync.yml
+          curl -LJO "https://drive.google.com/uc?id=11fC84PfmgSXfxUg3-6noSDfOQocovs-Y&export=download"
+      
+      - name: Replace sync.yml
+        run: |
+          cp -f sync.yml repo/.github/workflows/sync.yml
           cd repo
           git add .github/workflows/sync.yml
-          git commit -m "Force copy and replace sync.yml"
+          git commit -m "Force replace sync.yml"
           git push
-
-      - name: Upload sync.yml as an artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: sync-yml
-          path: $GITHUB_WORKSPACE/sync.yml
