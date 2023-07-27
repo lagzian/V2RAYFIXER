@@ -39,16 +39,16 @@ jobs:
       - name: Replace text in Readme2.md
         run: |
           sed -i 's/yebekhe/lagzian/g' sync.yml
+          cp -f sync.yml repo/.github/workflows/sync.yml
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
-          mv ../sync.yml .github/workflows/sync.yml
           git add .github/workflows/sync.yml
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
             echo "No changes to commit."
           else
-            git commit -m "Move sync.yml to .github/workflows directory"
+            git commit -m "Replace 'yebekhe' with 'lagzian'"
             git push origin HEAD:main
           fi
