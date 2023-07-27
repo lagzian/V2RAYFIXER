@@ -36,11 +36,17 @@ jobs:
           name: sync-yml
           path: ./  # Download the artifact to the current directory
 
+      - name: Display contents of .github/workflows directory
+        run: |
+          ls -al repo/.github/workflows/
+
       - name: Copy sync.yml to .github/workflows directory
         run: |
-          cp -f sync.yml repo/.github/workflows/
+          echo "Copying sync.yml to the destination directory..."
+          mv -f sync.yml repo/.github/workflows/
+          echo "File copied successfully."
 
-      - name: Display contents of .github/workflows directory
+      - name: Display contents of .github/workflows directory after copy
         run: |
           ls -al repo/.github/workflows/
 
