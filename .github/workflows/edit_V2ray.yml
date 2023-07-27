@@ -16,15 +16,11 @@ jobs:
           ls -al  # Debugging output to show the file is downloaded
         continue-on-error: true
 
-      - name: Create .github/workflows directory
-        run: mkdir -p repo/.github/workflows
-        continue-on-error: true
-
-      - name: Move sync.yml to lagzian/TelegramV2rayCollector
-        run: |
-          mv sync.yml repo/.github/workflows/sync.yml || true
-          ls -al repo/.github/workflows  # Debugging output to show the file is moved
-        continue-on-error: true
+      - name: Upload sync.yml to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: sync-yml
+          path: sync.yml
 
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -33,6 +29,12 @@ jobs:
           path: repo  # Clone the repository to the "repo" directory
           persist-credentials: false
           fetch-depth: 0
+
+      - name: Download sync.yml from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: sync-yml
+          path: repo/.github/workflows/sync.yml
 
       - name: Replace text in Readme2.md
         run: |
