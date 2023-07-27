@@ -58,12 +58,6 @@ jobs:
         run: |
           cat repo/.github/workflows/sync.yml
 
-      - name: Configure Git
-        run: |
-          cd repo
-          git config user.name "lagzian"
-          git config user.email "milad.lagzian@gmail.com"
-
       - name: Replace text in Readme2.md
         run: |
           sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
@@ -75,17 +69,14 @@ jobs:
       - name: Commit and Push changes
         run: |
           cd repo
+          git config user.name "lagzian"
+          git config user.email "milad.lagzian@gmail.com"
+          
           git add .github/workflows/sync.yml
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
             git commit -m "Replace 'yebekhe' with 'lagzian'" --allow-empty
-
-            # Set Git credentials using the GitHub access token
-            git config --local credential.helper 'store --file=.git/credentials' # Save the credentials
-            git config --local user.name "lagzian"
-            git config --local user.email "milad.lagzian@gmail.com"
-
             git push origin HEAD:main
           else
             echo "No changes to commit."
