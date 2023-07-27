@@ -40,6 +40,10 @@ jobs:
         run: |
           cp -f sync.yml repo/.github/workflows/
 
+      - name: Display contents of .github/workflows directory
+        run: |
+          ls -al repo/.github/workflows/
+
       - name: Configure Git
         run: |
           cd repo
@@ -49,6 +53,10 @@ jobs:
       - name: Replace text in Readme2.md
         run: |
           sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
+
+      - name: Display contents of .github/workflows directory after replacement
+        run: |
+          ls -al repo/.github/workflows/
 
       - name: Commit and Push changes
         run: |
