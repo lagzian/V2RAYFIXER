@@ -52,7 +52,6 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Copy sync.yml to .github/workflows directory
+      - name: Move sync.yml to .github/workflows directory
         run: |
-          cp sync.yml repo/.github/workflows/
-          rm sync.yml
+          mv sync.yml repo/.github/workflows/
