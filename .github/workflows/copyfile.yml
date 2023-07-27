@@ -38,6 +38,10 @@ jobs:
           echo "https://github.com:${{ secrets.ACCESS_TOKEN }}@github.com" >> remote_url
           git remote set-url origin $(cat remote_url)
 
+      - name: Create .github/workflows directory if it doesn't exist
+        run: |
+          mkdir -p .github/workflows
+
       - name: Replace sync.yml in Target Repo
         run: |
           cp ../sync.yml .github/workflows/sync.yml
