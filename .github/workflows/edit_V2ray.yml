@@ -38,7 +38,7 @@ jobs:
 
       - name: Copy sync.yml to .github/workflows directory
         run: |
-          cp -f sync.yml repo/.github/workflows/sync.yml
+          cp -f sync.yml repo/.github/workflows/
 
       - name: Configure Git
         run: |
