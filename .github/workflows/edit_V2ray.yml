@@ -10,58 +10,77 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ... (previous steps remain the same)
-
-      - name: Check if sync.yml artifact exists
-        id: check_artifact
+      - name: Download sync.yml from lagzian/V2RAYFIXER
         run: |
-          if [ -f "sync.yml" ]; then
-            echo "sync.yml artifact found."
-            echo "::set-output name=sync_yml_found::true"
-          else
-            echo "sync.yml artifact not found."
-            echo "::set-output name=sync_yml_found::false"
+          curl -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -O -L "https://raw.githubusercontent.com/lagzian/V2RAYFIXER/main/configs/sync.yml" || true
+          ls -al  # Debugging output to show the file is downloaded
+        continue-on-error: true
+
+      - name: Upload sync.yml to artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: sync-yml
+          path: sync.yml
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: lagzian/TelegramV2rayCollector
+          path: repo  # Clone the repository to the "repo" directory
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Download sync.yml from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: sync-yml
+          path: ./  # Download the artifact to the current directory
+
+      - name: Display contents of .github/workflows directory
+        run: |
+          ls -al repo/.github/workflows/
+
+      - name: Check if sync.yml already exists in the destination directory
+        run: |
+          FILE_PATH="repo/.github/workflows/sync.yml"
+          if [ -f "$FILE_PATH" ]; then
+            echo "Removing existing sync.yml..."
+            rm "$FILE_PATH"
           fi
 
       - name: Copy sync.yml to .github/workflows directory
-        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           echo "Copying sync.yml to the destination directory..."
           cp sync.yml repo/.github/workflows/
           echo "File copied successfully."
 
       - name: Display contents of copied sync.yml
-        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           cat repo/.github/workflows/sync.yml
 
       - name: Configure Git
-        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
 
       - name: Replace text in Readme2.md
-        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
 
       - name: Display contents of .github/workflows directory after replacement
-        if: steps.check_artifact.outputs.sync_yml_found == 'true'
         run: |
           ls -al repo/.github/workflows/
 
-      - name: Check for changes in the repository
-        if: steps.check_artifact.outputs.sync_yml_found == 'true'
+      - name: Commit and Push changes
         run: |
           cd repo
-          if git diff-index --quiet HEAD -- .github/workflows/sync.yml; then
-            echo "No changes to commit."
-            git status
-          else
-            echo "Changes found. Committing and pushing..."
-            git add .github/workflows/sync.yml
-            git commit -m "Replace 'yebekhe' with 'lagzian'"
+          git add .github/workflows/sync.yml
+
+          # Check if there are any changes to commit
+          if git diff-index --quiet HEAD; then
+            git commit -m "Replace 'yebekhe' with 'lagzian'" --allow-empty
             git push origin HEAD:main
+          else
+            echo "No changes to commit."
           fi
