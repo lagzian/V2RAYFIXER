@@ -28,21 +28,27 @@ jobs:
           git config --global user.name "lagzian"
           git config --global user.email "milad.lagzian@gmail.com"
 
-      - name: Clone Target Repo
+      - name: Clone Target Repo with PAT
         run: |
           git clone https://github.com/lagzian/TelegramV2rayCollector.git target-repo
+          cd target-repo
+          git config user.name "Your Name"
+          git config user.email "your-email@example.com"
+          git config credential.helper store # Store credentials for future use
+          echo "https://github.com:${{ secrets.ACCESS_TOKEN }}@github.com" >> remote_url
+          git remote set-url origin $(cat remote_url)
 
       - name: Replace sync.yml in Target Repo
         run: |
-          cp sync.yml target-repo/.github/workflows/sync.yml
+          cp ../sync.yml .github/workflows/sync.yml
 
       - name: Commit and Push Changes
         run: |
-          cd target-repo
           git add .github/workflows/sync.yml
           git commit -m "Update sync.yml"
           git push
 
       - name: Cleanup
         run: |
-          rm sync.yml
+          rm ../sync.yml
+          rm remote_url
