@@ -36,13 +36,23 @@ jobs:
           name: sync-yml
           path: ./  # Download the artifact to the current directory
 
-      - name: Replace text in Readme2.md
+      - name: Copy sync.yml to .github/workflows directory
         run: |
-          sed -i 's/yebekhe/lagzian/g' sync.yml
           cp -f sync.yml repo/.github/workflows/sync.yml
+
+      - name: Configure Git
+        run: |
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
+
+      - name: Replace text in Readme2.md
+        run: |
+          sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
+
+      - name: Commit and Push changes
+        run: |
+          cd repo
           git add .github/workflows/sync.yml
 
           # Check if there are any changes to commit
