@@ -21,8 +21,7 @@ jobs:
 
       - name: Download sync.yml from Google Drive
         run: |
-          curl -LJO "https://drive.google.com/uc?id=11fC84PfmgSXfxUg3-6noSDfOQocovs-Y&export=download"
-          mv uc?id=11fC84PfmgSXfxUg3-6noSDfOQocovs-Y\&export=download sync.yml
+          curl -L "https://drive.google.com/uc?id=11fC84PfmgSXfxUg3-6noSDfOQocovs-Y&export=download" > sync.yml
 
       - name: Configure Git
         run: |
