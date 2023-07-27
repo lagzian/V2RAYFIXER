@@ -13,11 +13,17 @@ jobs:
       - name: Download sync.yml from lagzian/V2RAYFIXER
         run: |
           curl -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -O -L "https://raw.githubusercontent.com/lagzian/V2RAYFIXER/main/configs/sync.yml" || true
+          ls -al  # Debugging output to show the file is downloaded
         continue-on-error: true
 
-      - name: Copy sync.yml to lagzian/TelegramV2rayCollector
+      - name: Create .github/workflows directory
+        run: mkdir -p repo/.github/workflows
+        continue-on-error: true
+
+      - name: Move sync.yml to lagzian/TelegramV2rayCollector
         run: |
           mv sync.yml repo/.github/workflows/sync.yml || true
+          ls -al repo/.github/workflows  # Debugging output to show the file is moved
         continue-on-error: true
 
       - name: Checkout repository
