@@ -18,7 +18,7 @@ jobs:
 
       - name: Sync repository
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN1 }}
         id: sync
         run: |
           gh repo sync lagzian/TelegramV2rayCollector -b main || echo "::set-output name=exit_code::1"
