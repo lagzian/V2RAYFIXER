@@ -38,10 +38,16 @@ jobs:
       - name: Download sync.yml
         run: |
           curl -LJO "https://drive.google.com/uc?id=11fC84PfmgSXfxUg3-6noSDfOQocovs-Y&export=download"
+          mv sync.yml repo/.github/workflows/sync.yml
+      
+      - name: Verify sync.yml
+        run: |
+          ls -l repo/.github/workflows/sync.yml
+          cat repo/.github/workflows/sync.yml
 
       - name: Replace sync.yml
         run: |
-          if ! cmp -s sync.yml repo/sync.yml; then
+          if ! cmp -s sync.yml repo/.github/workflows/sync.yml; then
             cp -f sync.yml repo/.github/workflows/sync.yml
             cd repo
             git add .github/workflows/sync.yml
