@@ -10,35 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download sync.yml from lagzian/V2RAYFIXER
+      # ... (previous steps remain the same)
+
+      - name: Display contents of copied sync.yml
         run: |
-          curl -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -O -L "https://raw.githubusercontent.com/lagzian/V2RAYFIXER/main/configs/sync.yml" || true
-          ls -al  # Debugging output to show the file is downloaded
-        continue-on-error: true
-
-      - name: Upload sync.yml to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: sync-yml
-          path: sync.yml
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          repository: lagzian/TelegramV2rayCollector
-          path: repo  # Clone the repository to the "repo" directory
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Download sync.yml from artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: sync-yml
-          path: ./  # Download the artifact to the current directory
-
-      - name: Display contents of .github/workflows directory
-        run: |
-          ls -al repo/.github/workflows/
+          cat repo/.github/workflows/sync.yml
 
       - name: Check if sync.yml already exists in the destination directory
         run: |
@@ -72,15 +48,15 @@ jobs:
         run: |
           ls -al repo/.github/workflows/
 
-      - name: Commit and Push changes
+      - name: Check for changes in the repository
         run: |
           cd repo
-          git add .github/workflows/sync.yml
-
-          # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
             echo "No changes to commit."
+            git status
           else
+            echo "Changes found. Committing and pushing..."
+            git add .github/workflows/sync.yml
             git commit -m "Replace 'yebekhe' with 'lagzian'"
             git push origin HEAD:main
           fi
