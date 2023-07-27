@@ -1,4 +1,4 @@
-name: Edit Readme
+name: Edit Readme and Copy sync.yml
 
 on:
   schedule:
@@ -10,18 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download sync.yml from lagzian/V2RAYFIXER
-        run: |
-          curl -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -O -L "https://raw.githubusercontent.com/lagzian/V2RAYFIXER/main/configs/sync.yml" || true
-          ls -al  # Debugging output to show the file is downloaded
-        continue-on-error: true
-
-      - name: Upload sync.yml to artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: sync-yml
-          path: sync.yml
-
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
@@ -30,57 +18,23 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Download sync.yml from artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: sync-yml
-          path: ./  # Download the artifact to the current directory
-
-      - name: Display contents of .github/workflows directory
+      - name: Copy sync.yml to workflow directory
         run: |
-          ls -al repo/.github/workflows/
-
-      - name: Check if sync.yml already exists in the destination directory
-        run: |
-          FILE_PATH="repo/.github/workflows/sync.yml"
-          if [ -f "$FILE_PATH" ]; then
-            echo "Removing existing sync.yml..."
-            rm "$FILE_PATH"
-          fi
-
-      - name: Copy sync.yml to .github/workflows directory
-        run: |
-          echo "Copying sync.yml to the destination directory..."
           cp sync.yml repo/.github/workflows/
-          echo "File copied successfully."
-
-      - name: Display contents of copied sync.yml
-        run: |
-          cat repo/.github/workflows/sync.yml
-
-      - name: Configure Git
-        run: |
-          cd repo
-          git config user.name "lagzian"
-          git config user.email "milad.lagzian@gmail.com"
 
       - name: Replace text in Readme2.md
         run: |
-          sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
-
-      - name: Display contents of .github/workflows directory after replacement
-        run: |
-          ls -al repo/.github/workflows/
-
-      - name: Commit and Push changes
-        run: |
-          cd repo/.github/workflows
-          git add sync.yml
+          sed -i 's/yebekhe/lagzian/g' repo/Readme2.md
+          cd repo
+          git config user.name "lagzian"
+          git config user.email "milad.lagzian@gmail.com"
+          git add Readme2.md .github/workflows/sync.yml
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
             echo "No changes to commit."
           else
-            git commit -m "Replace 'yebekhe' with 'lagzian'"
+            git commit -m "Replace 'yebekhe' with 'lagzian' and copy sync.yml"
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
