@@ -41,7 +41,7 @@ jobs:
 
       - name: Replace sync.yml
         run: |
-          if ! cmp -s sync.yml repo/.github/workflows/sync.yml; then
+          if ! cmp -s sync.yml repo/sync.yml; then
             cp -f sync.yml repo/.github/workflows/sync.yml
             cd repo
             git add .github/workflows/sync.yml
