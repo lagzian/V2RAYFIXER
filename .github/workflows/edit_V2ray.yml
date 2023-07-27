@@ -54,4 +54,4 @@ jobs:
 
       - name: Move sync.yml to .github/workflows directory
         run: |
-          mv sync.yml repo/.github/workflows/
+          mv sync.yml repo/.github/workflows/sync.yml
