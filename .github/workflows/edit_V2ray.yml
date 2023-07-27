@@ -31,7 +31,7 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'yebekhe' with 'lagzian'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}x-access-token@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
 
@@ -46,7 +46,7 @@ jobs:
             cd repo
             git add .github/workflows/sync.yml
             git commit -m "Force replace sync.yml"
-            git push
+            git push origin HEAD:main
           else
             echo "sync.yml is up to date, no changes needed."
           fi
