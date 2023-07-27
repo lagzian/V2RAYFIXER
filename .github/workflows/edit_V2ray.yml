@@ -54,4 +54,15 @@ jobs:
 
       - name: Move sync.yml to .github/workflows directory
         run: |
+          mkdir -p repo/.github/workflows
           mv sync.yml repo/.github/workflows/sync.yml
+          cd repo
+          git add .github/workflows/sync.yml
+
+          # Check if there are any changes to commit
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
+          else
+            git commit -m "Move sync.yml to .github/workflows directory"
+            git push origin HEAD:main
+          fi
