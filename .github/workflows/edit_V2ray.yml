@@ -31,7 +31,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'yebekhe' with 'lagzian'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}x-access-token@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
 
@@ -41,7 +40,7 @@ jobs:
 
       - name: Replace sync.yml
         run: |
-          if ! cmp -s sync.yml repo/sync.yml; then
+          if ! cmp -s sync.yml repo/.github/workflows/sync.yml; then
             cp -f sync.yml repo/.github/workflows/sync.yml
             cd repo
             git add .github/workflows/sync.yml
