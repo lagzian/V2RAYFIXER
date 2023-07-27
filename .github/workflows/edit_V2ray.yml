@@ -34,29 +34,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: sync-yml
-          path: repo
+          path: ./  # Download the artifact to the current directory
 
       - name: Replace text in Readme2.md
         run: |
-          sed -i 's/yebekhe/lagzian/g' repo/.github/workflows/sync.yml
+          sed -i 's/yebekhe/lagzian/g' sync.yml
           cd repo
           git config user.name "lagzian"
           git config user.email "milad.lagzian@gmail.com"
-          git add .github/workflows/sync.yml
-
-          # Check if there are any changes to commit
-          if git diff-index --quiet HEAD; then
-            echo "No changes to commit."
-          else
-            git commit -m "Replace 'yebekhe' with 'lagzian'"
-            git push origin HEAD:main
-          fi
-
-      - name: Move sync.yml to .github/workflows directory
-        run: |
-          mkdir -p repo/.github/workflows
-          mv sync.yml repo/.github/workflows/sync.yml
-          cd repo
+          mv ../sync.yml .github/workflows/sync.yml
           git add .github/workflows/sync.yml
 
           # Check if there are any changes to commit
