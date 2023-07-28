@@ -47,7 +47,7 @@ jobs:
         if: steps.sync.outputs.exit_code == '0'
         id: check_readme_changes
         run: |
-          git diff --exit-code README.md || echo "::set-output name=has_changes::true"
+          git diff --quiet README.md || echo "has_changes=true" >> $GITHUB_ENV
 
       - name: Edit README and Push Changes
         if: steps.check_readme_changes.outputs.has_changes == 'true'
