@@ -1,4 +1,4 @@
-name: Combined Workflow
+name: Single Workflow
 
 on:
   schedule:
