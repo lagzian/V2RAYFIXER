@@ -37,7 +37,7 @@ jobs:
               bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
               bot = Bot(token=bot_token)
               chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
-              message = '✅✅ V2ray Repository Updated Successfully! ✅✅'
+              message = '✅✅🔥 **V2RAYFIXER** V2ray Repository Updated Successfully! 🔥✅✅'
               await bot.send_message(chat_id=chat_id, text=message)
 
           asyncio.run(send_telegram_message())
@@ -57,7 +57,7 @@ jobs:
               bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
               bot = Bot(token=bot_token)
               chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
-              message = '❗❗⚠️⚠️ V2ray Repository Sync Failed! ⚠️⚠️❗❗'
+              message = '❗❗⚠️⚠️🔥**V2RAYFIXER** V2ray Repository Sync Failed! 🔥⚠️⚠️❗❗'
               await bot.send_message(chat_id=chat_id, text=message)
 
           asyncio.run(send_telegram_message())
