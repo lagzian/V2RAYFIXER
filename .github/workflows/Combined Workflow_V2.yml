@@ -101,5 +101,11 @@ jobs:
           git config user.name ${{ secrets.USER_NAME }}
           git config user.email ${{ secrets.USER_EMAIL }}
           git add README.md
-          git commit -m "Replace 'lagzian.link' with 'yebekhe.link'"
-          git push origin HEAD:main
+
+          # Check if there are any changes to commit
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
+          else
+            git commit -m "Replace 'lagzian.link' with 'yebekhe.link'"
+            git push origin HEAD:main
+          fi
