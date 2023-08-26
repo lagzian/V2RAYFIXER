@@ -107,5 +107,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'lagzian.link' with 'yebekhe.link'"
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
