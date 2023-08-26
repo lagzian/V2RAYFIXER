@@ -92,3 +92,14 @@ jobs:
             git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TelegramV2rayCollector.git
             git push origin HEAD:main
           fi
+
+      - name: Replace text in README.md again
+        if: success()
+        run: |
+          sed -i 's/lagzian.link/yebekhe.link/g' repo/README.md
+          cd repo
+          git config user.name ${{ secrets.USER_NAME }}
+          git config user.email ${{ secrets.USER_EMAIL }}
+          git add README.md
+          git commit -m "Replace 'lagzian.link' with 'yebekhe.link'"
+          git push origin HEAD:main
