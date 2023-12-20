@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN1 }}
         id: sync
         run: |
-          gh repo sync lagzian/TVC_new_version -b main --force || echo "::set-output name=exit_code::1"
+          gh repo sync lagzian/TVC -b main --force || echo "::set-output name=exit_code::1"
 
       - name: Send Telegram notification on success
         if: steps.sync.outputs.exit_code == '0'
@@ -71,7 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          repository: lagzian/TVC_new_version
+          repository: lagzian/TVC
           path: repo  # Clone the repository to the "repo" directory
           persist-credentials: false
           fetch-depth: 0
@@ -89,7 +89,7 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'yebekhe' with 'lagzian'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TVC_new_version.git
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TVC.git
             git push origin HEAD:main
           fi
 
@@ -107,6 +107,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'lagzian.link' with 'yebekhe.link'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TVC_new_version.git
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TVC.git
             git push origin HEAD:main
           fi
