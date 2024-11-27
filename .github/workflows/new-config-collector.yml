@@ -1,4 +1,4 @@
-name: Combined Workflow_V3
+name: Combined Workflow_V4
 
 on:
   schedule:
@@ -76,13 +76,13 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
 
-      - name: Replace text in README.md
+      - name: Replace text in readme.md
         run: |
-          sed -i 's/soroushmirzaei/lagzian/g' repo/README.md
+          sed -i 's/soroushmirzaei/lagzian/g' repo/readme.md
           cd repo
           git config user.name ${{ secrets.USER_NAME }}
           git config user.email ${{ secrets.USER_EMAIL }}
-          git add README.md
+          git add readme.md
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
@@ -93,14 +93,14 @@ jobs:
             git push origin HEAD:main
           fi
 
-      - name: Replace text in README.md again
+      - name: Replace text in readme.md again
         if: success()
         run: |
-          sed -i 's/telegram-configs-collector/new-configs-collector/g' repo/README.md
+          sed -i 's/telegram-configs-collector/new-configs-collector/g' repo/readme.md
           cd repo
           git config user.name ${{ secrets.USER_NAME }}
           git config user.email ${{ secrets.USER_EMAIL }}
-          git add README.md
+          git add readme.md
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
