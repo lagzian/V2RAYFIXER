@@ -80,7 +80,11 @@ jobs:
     if: needs.sync_repository.result == 'failure' || needs.edit_readme.outputs.commit_made == 'true'
 
     steps:
+      - name: Install Python dependencies
+        run: pip install python-telegram-bot
+
       - name: Send Telegram notification
+        if: always()  # Ensure this step runs regardless of the job's success or failure
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -93,7 +97,7 @@ jobs:
               bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
               bot = Bot(token=bot_token)
               chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
-              if '${{ needs.sync_repository.result }}' == 'failure':
+              if '${{ job.status }}' == 'failure':
                   message = '❗❗⚠️⚠️🔥 NEW-V2ray Repository Sync Failed! 🔥⚠️⚠️❗❗'
               else:
                   message = '✅✅🔥 New-V2ray Repo Updated Successfully! 🔥✅✅'
@@ -101,3 +105,4 @@ jobs:
 
           asyncio.run(send_telegram_message())
           EOF
+
