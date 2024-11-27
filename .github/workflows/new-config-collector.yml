@@ -23,49 +23,11 @@ jobs:
         run: |
           gh repo sync lagzian/new-configs-collector -b main --force || echo "::set-output name=exit_code::1"
 
-      - name: Send Telegram notification on success
-        if: steps.sync.outputs.exit_code == '0'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          python - <<EOF
-          import asyncio
-          from telegram import Bot
-
-          async def send_telegram_message():
-              bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
-              bot = Bot(token=bot_token)
-              chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
-              message = '✅✅🔥 New V2ray Repo Updated Successfully! 🔥✅✅'
-              await bot.send_message(chat_id=chat_id, text=message)
-
-          asyncio.run(send_telegram_message())
-          EOF
-
-      - name: Send Telegram notification on failure
-        if: steps.sync.outputs.exit_code != '0'
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          python - <<EOF
-          import asyncio
-          from telegram import Bot
-
-          async def send_telegram_message():
-              bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
-              bot = Bot(token=bot_token)
-              chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
-              message = '❗❗⚠️⚠️🔥 V2ray Repository Sync Failed! 🔥⚠️⚠️❗❗'
-              await bot.send_message(chat_id=chat_id, text=message)
-
-          asyncio.run(send_telegram_message())
-          EOF
-
   edit_readme:
     needs: sync_repository  # Ensure that the sync_repository job is completed before starting this job
     runs-on: ubuntu-latest
+    outputs:
+      commit_made: ${{ steps.check_commit.outputs.commit_made }}
 
     steps:
       - name: Checkout repository
@@ -77,29 +39,30 @@ jobs:
           fetch-depth: 0
 
       - name: Replace text in readme.md
+        id: check_commit
         run: |
-          sed -i 's/soroushmirzaei/lagzian/g' repo/readme.md
           cd repo
+          sed -i 's/soroushmirzaei/lagzian/g' readme.md
           git config user.name ${{ secrets.USER_NAME }}
           git config user.email ${{ secrets.USER_EMAIL }}
           git add readme.md
 
           # Check if there are any changes to commit
           if git diff-index --quiet HEAD; then
+            echo "::set-output name=commit_made::false"
             echo "No changes to commit."
           else
             git commit -m "Replace 'soroushmirzaei' with 'lagzian'"
             git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/new-configs-collector.git
             git push origin HEAD:main
+            echo "::set-output name=commit_made::true"
           fi
 
       - name: Replace text in readme.md again
         if: success()
         run: |
-          sed -i 's/telegram-configs-collector/new-configs-collector/g' repo/readme.md
           cd repo
-          git config user.name ${{ secrets.USER_NAME }}
-          git config user.email ${{ secrets.USER_EMAIL }}
+          sed -i 's/telegram-configs-collector/new-configs-collector/g' readme.md
           git add readme.md
 
           # Check if there are any changes to commit
@@ -107,6 +70,32 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'telegram-configs-collector' with 'new-configs-collector'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/new-configs-collector.git
             git push origin HEAD:main
-          fi
+
+  notify:
+    needs: [sync_repository, edit_readme]
+    runs-on: ubuntu-latest
+    if: needs.sync_repository.result == 'failure' || needs.edit_readme.outputs.commit_made == 'true'
+
+    steps:
+      - name: Send Telegram notification
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<EOF
+          import asyncio
+          from telegram import Bot
+
+          async def send_telegram_message():
+              bot_token = '${{ env.TELEGRAM_BOT_TOKEN }}'
+              bot = Bot(token=bot_token)
+              chat_id = '${{ env.TELEGRAM_CHAT_ID }}'
+              if '${{ needs.sync_repository.result }}' == 'failure':
+                  message = '❗❗⚠️⚠️🔥 V2ray Repository Sync Failed! 🔥⚠️⚠️❗❗'
+              else:
+                  message = '✅✅🔥 New V2ray Repo Updated Successfully! 🔥✅✅'
+              await bot.send_message(chat_id=chat_id, text=message)
+
+          asyncio.run(send_telegram_message())
+          EOF
