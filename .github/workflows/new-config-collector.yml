@@ -89,7 +89,7 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'soroushmirzaei' with 'lagzian'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TVC.git
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/new-config-collector.git
             git push origin HEAD:main
           fi
 
@@ -107,6 +107,6 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "Replace 'telegram-configs-collector' with 'new-configs-collector'"
-            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/TVC.git
+            git remote set-url origin https://${{ secrets.ACCESS_TOKEN }}@github.com/lagzian/new-config-collector.git
             git push origin HEAD:main
           fi
