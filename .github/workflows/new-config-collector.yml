@@ -71,6 +71,8 @@ jobs:
           else
             git commit -m "Replace 'telegram-configs-collector' with 'new-configs-collector'"
             git push origin HEAD:main
+          fi
+
 
   notify:
     needs: [sync_repository, edit_readme]
