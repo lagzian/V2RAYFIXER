@@ -2,7 +2,7 @@
 
 ## Overview
 
-**V2RAYFIXER** is a powerful tool designed to automatically synchronize any repository with its parent repository at scheduled intervals. This functionality is particularly useful for developers and teams who need to keep their forks or clones up-to-date without manual intervention. Additionally, V2RAYFIXER can modify files according to specified instructions in its code, allowing for automated adjustments and enhancements as needed.
+**V2RAYFIXER** is a handful script designed to automatically synchronize any repository with its parent repository at scheduled intervals. This functionality is particularly useful for developers and teams who need to keep their forks or clones up-to-date without manual intervention. Additionally, V2RAYFIXER can modify files according to specified instructions in its code, allowing for automated adjustments and enhancements as needed.
 
 ## Features
 
